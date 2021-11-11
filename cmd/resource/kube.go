@@ -62,14 +62,14 @@ func createKubeConfig(esvc EKSAPI, ssvc STSAPI, secsvc SecretsManagerAPI, cluste
 		if err != nil {
 			return err
 		}
-		defaultConfig.AuthInfos["aws"] = &api.AuthInfo{
+		defaultConfig.AuthInfos[*cluster] = &api.AuthInfo{
 			Token: *token,
 		}
-		defaultConfig.Contexts["aws"] = &api.Context{
+		defaultConfig.Contexts[*cluster] = &api.Context{
 			Cluster:  *cluster,
-			AuthInfo: "aws",
+			AuthInfo: *cluster,
 		}
-		defaultConfig.CurrentContext = "aws"
+		defaultConfig.CurrentContext = *cluster
 		log.Printf("Writing kubeconfig file to %s", KubeConfigLocalPath)
 
 		err = clientcmd.WriteToFile(*defaultConfig, KubeConfigLocalPath)
